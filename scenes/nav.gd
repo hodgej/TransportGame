@@ -3,25 +3,28 @@ extends Node2D
 onready var tileRoads = get_node("../tileRoads")
 onready var debugUI = get_node("../debugUI")
 
-
 var astar = AStar2D.new()
 
 var nodes = {} #contains the vector location of a cell matched with its id
 
 var spotCheckList = { 
-					1:[Vector2(0, 1)], #up to down right
-					0:[Vector2(-1,0)], #left to up
-					2:[Vector2(0, 1)], # down
-					3:[Vector2(1,0)], # right straight
+					1:[Vector2(1, 0)], #up to down right
+					0:[Vector2(0,1)], #left to up
+					2:[Vector2(1,0)], # down
+					3:[Vector2(0,-1)], # right straight
 					4:[Vector2(0,1)], #right to down
 					5:[Vector2(0,-1)], #left to up
-					6:[Vector2(0,-1)], #up
-					7:[Vector2(-1, 0 )], #left 
-					8:[Vector2(1,0)], #down to right
-					9:[Vector2(0, 1)], #right to up
-					10:[Vector2(0,1)], #right to down
-					11:[Vector2(1,0)] #up to right
-					
+					6:[Vector2(-1,0)], #up
+					7:[Vector2(0, 1 )], #left 
+					8:[Vector2(0,-1)], #down to right
+					9:[Vector2(-1,0)], #right to up
+					10:[Vector2(1,0)], #right to down
+					11:[Vector2(0,-1)], #up to right
+					12:[Vector2(0,1), Vector2(0,-1), Vector2(1,0)], #3 way up right down
+					13:[Vector2(0,1), Vector2(0,-1), Vector2(-1,0)],
+					15:[Vector2(1,0), Vector2(0,-1), Vector2(-1,0)], 
+					16:[Vector2(1,0), Vector2(-1,0), Vector2(0,1), Vector2(0,-1)],
+					17:[Vector2(1,0), Vector2(-1,0), Vector2(0,1)],
 					}
 
 # later, we can make an "acceptor" list, which would disallow access
@@ -34,7 +37,6 @@ func _ready():
 	populateGraph()
 
 
-
 func initNodes():
 	#assign every existing cell a unique id
 	var currentIndx = 0
@@ -43,8 +45,6 @@ func initNodes():
 		
 		astar.add_point(currentIndx, Vector2(0,0), 0) #default position til updated
 		currentIndx += 1
-
-#	print(nodes)
 
 
 func populateGraph():
@@ -80,7 +80,7 @@ func populateGraph():
 				#for debug
 				var positionInWorld = (tileRoads.map_to_world(cellFound) + Vector2(32,32))			
 				debugUI.spots.append(positionInWorld)
-				debugUI.textToDraw[cellFoundID] = positionInWorld
+				#debugUI.textToDraw[cellFoundID] = positionInWorld
 				
 				connections.append(cellFound) #adds location of found cell to connections
 		
